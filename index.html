@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Javascript</title>
+</head>
+
+<style>
+    .err{
+        line-height: 10px;
+        color: red;
+    }
+
+
+    /* #letters i{
+        color: blueviolet;
+    } */
+</style>
+<body>
+  
+
+    <div class="container"  style="width: 50%; display: flex; flex-direction: column; margin-left: 50%; margin-top: 30%;  transform: translate(-50%, -40%);">
+        <div>
+            <h2 style="text-align: center; margin-bottom: 10px;">Sign Up</h2>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="text" id="password" class="form-control" maxlength="16">
+          </div>
+          <div>
+
+              <p class="err" id="letters">
+                  <i class="fa-sharp fa-solid fa-circle-xmark"></i>
+                   Password Must be contain number and Small Letters
+             </p>
+              <p class="err" id="number">  <i class="fa-sharp fa-solid fa-circle-xmark"></i> Password Must be contain at least one number 
+              <p class="err" id="special">  <i class="fa-sharp fa-solid fa-circle-xmark"></i> Password Must be contain  at least One Special character (Special characters Must be #,@,$)</p>
+              <p class="err" id="greater_Than_8">  <i class="fa-sharp fa-solid fa-circle-xmark"></i> Password Must be Greater Than 8 characters</p>
+              <!-- <i class="fa-solid fa-square-check"></i> -->
+          </div>
+          <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+    </div>
+<script>
+    var password = document.getElementById("password")
+    password.addEventListener('keyup', validate_password)
+
+    function validate_password(){
+        var password = document.getElementById("password").value;
+        var capital = /[A-Z]/;
+        var small  = /[a-z]/;
+
+        if(capital.test(password) && small.test(password)){
+            document.getElementById("letters").style.color = "green";
+            var query = document.querySelector("#letters i");
+            query.className = "fa-solid fa-square-check";
+        }else{
+            document.getElementById("letters").style.color = "red";
+            var query = document.querySelector("#letters i");
+            query.className = "fa-sharp fa-solid fa-circle-xmark";
+        }
+
+        var number = /\d/;
+
+        if(number.test(password)){
+            var number_text = document.getElementById("number");
+            number_text.style.color = "green"
+            document.querySelector("#number i").className = "fa-solid fa-square-check"
+
+        }
+        else{
+            var number_text = document.getElementById("number");
+            number_text.style.color = "red"
+            document.querySelector("#number i").className = "fa-sharp fa-solid fa-circle-xmark"
+        }
+
+
+        var special = /[@$#]/;
+
+        if(special.test(password)){
+            var special_text = document.getElementById("special");
+            special_text.style.color = "green"
+            document.querySelector("#special i").className = "fa-solid fa-square-check"
+        }
+        else{
+            var special_text = document.getElementById("special");
+            special_text.style.color = "red"
+            document.querySelector("#special i").className = "fa-sharp fa-solid fa-circle-xmark"
+        }
+
+        if(password.length >= 8){
+            document.getElementById("greater_Than_8").style.color = "green";
+            document.querySelector("#greater_Than_8 i").className = "fa-solid fa-square-check"
+        }
+        else{
+            document.getElementById("greater_Than_8").style.color = "red";
+            document.querySelector("#greater_Than_8 i").className = "fa-sharp fa-solid fa-circle-xmark"
+        }
+
+
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C R U D</title>
+
+
+    <style>
+        /* Reset some default styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Body background and font styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+/* Main container styling */
+.container {
+  margin: 20px auto;
+  width: 80%;
+  background-color: #fff;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* Add button styles */
+#addDataButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#addDataButton:hover {
+  background-color: #45a049;
+}
+
+/* Popup styles */
+#popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  max-width: 400px;
+}
+
+#popup h2 {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* Form input styles */
+#popup input {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Save and Update button styles */
+#saveDataButton, #updateDataButton {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#saveDataButton:hover, #updateDataButton:hover {
+  background-color: #45a049;
+}
+
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+thead th {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+/* Edit and Delete button styles in the table */
+.editButton, .deleteButton {
+  padding: 6px 10px;
+  font-size: 14px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.editButton:hover, .deleteButton:hover {
+  background-color: #45a049;
+}
+
+
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <button id="addDataButton">Add Data</button>
+        <div id="popup" class="hidden">
+          <input type="text" id="name" placeholder="Name">
+          <input type="text" id="email" placeholder="Email">
+          <input type="text" id="age" placeholder="Age">
+          <input type="text" id="college" placeholder="College">
+          <button id="saveDataButton">Save</button>
+          <button id="updateDataButton" class="hidden">Update</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Age</th>
+              <th>College</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+          </tbody>
+        </table>
+      </div>
+
+      <script>
+const addButton = document.getElementById('addDataButton');
+const saveButton = document.getElementById('saveDataButton');
+const updateButton = document.getElementById('updateDataButton');
+const popup = document.getElementById('popup');
+const tableBody = document.getElementById('tableBody');
+
+let currentRow = null;
+let isEditMode = false;
+
+function clearForm() {
+  document.getElementById('name').value = '';
+  document.getElementById('email').value = '';
+  document.getElementById('age').value = '';
+  document.getElementById('college').value = '';
+}
+
+function addDataToTable(name, email, age, college) {
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `
+    <td>${name}</td>
+    <td>${email}</td>
+    <td>${age}</td>
+    <td>${college}</td>
+    <td><button class="editButton">Edit</button></td>
+    <td><button class="deleteButton">Delete</button></td>
+  `;
+  tableBody.appendChild(newRow);
+
+  const editButton = newRow.querySelector('.editButton');
+  editButton.addEventListener('click', () => editData(newRow));
+
+  const deleteButton = newRow.querySelector('.deleteButton');
+  deleteButton.addEventListener('click', () => deleteData(newRow));
+}
+
+function editData(row) {
+  currentRow = row;
+  isEditMode = true;
+  const cells = row.getElementsByTagName('td');
+  document.getElementById('name').value = cells[0].textContent;
+  document.getElementById('email').value = cells[1].textContent;
+  document.getElementById('age').value = cells[2].textContent;
+  document.getElementById('college').value = cells[3].textContent;
+
+  popup.classList.remove('hidden');
+  updateButton.classList.remove('hidden');
+  saveButton.classList.add('hidden');
+}
+
+function deleteData(row) {
+  tableBody.removeChild(row);
+}
+
+addButton.addEventListener('click', () => {
+  currentRow = null;
+  isEditMode = false;
+  clearForm();
+  popup.classList.remove('hidden');
+  saveButton.classList.remove('hidden');
+  updateButton.classList.add('hidden');
+});
+
+saveButton.addEventListener('click', () => {
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const age = document.getElementById('age').value;
+  const college = document.getElementById('college').value;
+
+  if (name && email && age && college) {
+    addDataToTable(name, email, age, college);
+    popup.classList.add('hidden');
+    clearForm();
+  } else {
+    alert('Please fill all fields!');
+  }
+});
+
+updateButton.addEventListener('click', () => {
+  if (currentRow) {
+    const cells = currentRow.getElementsByTagName('td');
+    cells[0].textContent = document.getElementById('name').value;
+    cells[1].textContent = document.getElementById('email').value;
+    cells[2].textContent = document.getElementById('age').value;
+    cells[3].textContent = document.getElementById('college').value;
+
+    popup.classList.add('hidden');
+    clearForm();
+  }
+});
+
+      </script>
+</body>
+</html>

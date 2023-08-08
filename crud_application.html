@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD Application</title>
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+  <style>
+      *{
+    margin: 0;
+    padding: 0;
+}
+.table{
+    margin: 30px;
+}
+table{
+    
+    /* margin-right: 200px; */
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    padding: 1em;
+}
+header{
+    background-color: #1E1E1E;
+    height: 75px;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    margin-bottom: 30px;
+}
+#button{
+    margin-left: 20px;
+    padding: 5px 30px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+table tr th, table td{
+    padding: 5px 10px;
+}
+#body button{
+    background-color: black;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    /* height: 20px; */
+}
+input:focus{
+    border: none;
+    
+}
+
+.popup1{
+  visibility: hidden;
+  height: 60%;
+  background-color: #dddddd;
+  width: 30%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0);
+  /* border-radius: 10px; */
+}
+
+input{
+  width: 20vw;
+  height: 30px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+}
+.btn1{
+  height: 35px;
+  background-color: rgb(39 39 183);
+  color: white;
+  cursor: pointer;
+}
+#popup_close_icon{
+  cursor: pointer;
+  color: red; 
+  position: absolute; 
+  left: 94%;
+  bottom: 92%;
+}
+  </style>
+
+
+</head>
+<body>
+
+  <div id="popup" class="popup1">
+    <div>
+      <h3>Add New Student <i class="fa-solid fa-xmark" id="popup_close_icon"></i></h3>
+    </div>
+    <div>
+      <input type="text" id="name" placeholder="Name">
+    </div>
+    <div>
+      <input type="number" id="rollno" placeholder="Roll No">
+    </div>
+    <div>
+      <input type="text" id="subject" placeholder="Subject">
+    </div>
+    <div>
+      <input type="number" id="marks" placeholder="Marks">
+    </div>
+    <div>
+      <input type="button" id="btn" class="btn1" value="Save">
+    </div>
+  </div>
+
+  <div id="popup_edit" class="popup1">
+    <div>
+      <h3>Edit Student <i class="fa-solid fa-xmark" id="popup_close_icon"></i></h3>
+    </div>
+    <div>
+      <input type="text" id="edit_name" placeholder="Name">
+    </div>
+    <div>
+      <input type="number" id="edit_rollno" placeholder="Roll No">
+    </div>
+    <div>
+      <input type="text" id="edit_subject" placeholder="Subject">
+    </div>
+    <div>
+      <input type="number" id="edit_marks" placeholder="Marks">
+    </div>
+    <div>
+      <input type="button" id="edit_btn" class="btn1" value="Update">
+    </div>
+  </div>
+
+    <header>
+      <h1>
+        Dashboard
+      </h1>
+    </header>
+    <main>
+      <button id= "button">
+        Add A New Row
+      </button>
+    </main>
+    <div class = "table">
+      <table border="1px"> 
+        <thead>
+            <tr>
+              <th>ID</th>
+              <th>Student Name</th>
+              <th>Student Roll</th>
+              <th>Subject</th>
+              <th>Marks</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody id = "body">
+      
+        </tbody>
+      </table>
+    </div>
+
+
+    <script>
+        document.getElementById("button").addEventListener('click' , () =>{
+            document.getElementById("name").value = '';
+            document.getElementById("rollno").value = '';
+            document.getElementById("subject").value = '';
+            document.getElementById("marks").value = '';
+            document.getElementById("popup").style.visibility = "visible"
+        })
+
+
+        document.getElementById("popup_close_icon").addEventListener('click', ()=>{
+          document.getElementById("popup").style.visibility = "hidden"
+        })
+        var i = 1;
+        document.getElementById("btn").addEventListener('click', ()=>{
+          const name = document.getElementById("name").value;
+          const rollNo = document.getElementById("rollno").value;
+          const subject = document.getElementById("subject").value;
+          const marks = document.getElementById("marks").value;
+          let newrow = document.createElement("tr");
+          newrow.innerHTML = `
+            <td>${i++}</td>
+            <td>${name}</td>
+            <td>${rollNo}</td>
+            <td>${subject}</td>
+            <td>${marks}</td>
+            <td><button id="edit">edit</button></td>
+            <td><button id="delete">Delete</button></td>
+          `;
+          document.getElementById("body").appendChild(newrow);
+          document.getElementById("popup").style.visibility = "hidden"
+          
+        })
+
+        var previous_row = null;
+        document.addEventListener('click', (event) => {
+          var target = event.target;
+          if (target.id === 'edit') {
+            var node = target.parentNode.parentNode;
+            var td = node.getElementsByTagName('td');
+
+            previous_row = td;
+
+            document.getElementById("edit_name").value = td[1].textContent;
+            document.getElementById("edit_rollno").value = td[2].textContent;
+            document.getElementById("edit_subject").value = td[3].textContent;
+            document.getElementById("edit_marks").value = td[4].textContent;
+            document.getElementById("popup_edit").style.visibility = "visible";
+          }
+          else if(target.id == 'delete'){
+            var node = target.parentNode.parentNode;
+            node.parentNode.removeChild(node);
+          }
+        });
+
+        document.getElementById("edit_btn").addEventListener('click', () => {
+          if (previous_row) {
+            previous_row[1].textContent = document.getElementById("edit_name").value;
+            previous_row[2].textContent = document.getElementById("edit_rollno").value;
+            previous_row[3].textContent = document.getElementById("edit_subject").value;
+            previous_row[4].textContent = document.getElementById("edit_marks").value;
+            document.getElementById("popup_edit").style.visibility = "hidden";
+            previous_row = null;
+          }
+        });
+    </script>
+
+</body>
+</html>
